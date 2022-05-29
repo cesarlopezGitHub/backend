@@ -1,50 +1,12 @@
 <?php
-
 session_start();
 
     include("connection.php");
     include("functions.php");
 
-
-    if($_SERVER['REQUEST_METHOD'] == "POST")
-    {
-        //something was posted
-        $user_name = $_POST['user_name'];
-        $password = $_POST['password'];
-
-        if(!empty($user_name) && !empty($password) && !is_numeric($user_name))
-        {
-
-            //read from database
-            $query = "select * from users where user_name = '$user_name' limit 1";
-            $result = mysqli_query($con, $query);
-
-            if($result)
-            {
-                if($result && mysqli_num_rows($result) > 0)
-                {
-
-                    $user_data = mysqli_fetch_assoc($result);
-                    
-                    if($user_data['password'] === $password)
-                    {
-                        
-                        $_SESSION['user_id'] = $user_data['user_id'];
-                        header("Location: login.php");
-                        die;
-                    }
-                }
-            } 
-
-            echo "wrong username or password!";
-        }else
-        {
-            echo "Please enter some valid information!";
-        }
-    }
+    $user_data = check_login($con);
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -56,10 +18,17 @@ session_start();
   <title>Portfolio-Horacio Lopez</title>
   <link href="./main.d8e0d294.css" rel="stylesheet">
 </head>
+<body>
 
+    <a href="logout.php">Logout</a>
+    <h1>Proximamente editable por el administrador</h1>
+
+    <br>
+    HOLA, <?php echo $user_data['user_name']; ?>
+</body>
 <body oncontextmenu="return false">
 </body>
-<body>
+
 <div id="logo"> 
   <script>
     function myFunction() {
@@ -184,6 +153,10 @@ session_start();
 
        <div class="card">
          <div class="card-block">
+         <div class="float-right btn-group btn-group-sm">
+             <a href="#" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+             <a href="#" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+         </div>
            <h2></h2>
            <div class="row">
              <div class="col-md-4">
@@ -231,9 +204,17 @@ session_start();
     
         <div class="card">
           <div class="card-block">
+          <div class="float-right btn-group btn-group-sm">
+             <a href="#" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+             <a href="#" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+         </div>
             <h1><small>Certificaciones Tecnológicas</small></h1>
             <div class="card">
               <div class="card-block">
+              <div class="float-right btn-group btn-group-sm">
+             <a href="#" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+             <a href="#" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+         </div>
                 <h1>Ministerio de Desarrollo Productivo   Instituto Nacional Tecnología Industrial</h1>
                 <div class="row">
                   <div class="col-md-4">
@@ -257,6 +238,10 @@ session_start();
 
         <div class="card">
           <div class="card-block">
+          <div class="float-right btn-group btn-group-sm">
+             <a href="#" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+             <a href="#" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+         </div>
             <h1>Universitat Politecnica de Valencia</h1>
             <div class="row">
               <div class="col-md-4">
@@ -280,6 +265,10 @@ session_start();
 
         <div class="card">
           <div class="card-block">
+          <div class="float-right btn-group btn-group-sm">
+             <a href="#" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+             <a href="#" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+         </div>
             <h1>Ministerio de Desarrollo Productivo   Cámara Argentina de Software</h1>
             <div class="row">
               <div class="col-md-4">
@@ -342,11 +331,15 @@ session_start();
         
         <div class="card">
           <div class="card-block">
-          <h1><small>Idiomas</small></h1>
+          <div class="float-right btn-group btn-group-sm">
+             <a href="#" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+             <a href="#" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+         </div>
+          <h1><small>Lengua Extranjera</small></h1>
             <div class="row">
               <div class="col-md-4">
                 <div class="language-experience">
-                  <h1 class="h1"> <small>Inglés</small></h1>     
+                  <h1 class="h1"> <small>INGLES</small></h1>     
                     <h1></h1>
                 </div>
               </div>
@@ -357,7 +350,7 @@ session_start();
               </div>
               <div class="col-md-4">
                 <div class="language-experience">
-                  <h1 class="h1"> <small>Nivel C 2</small></h1>      
+                  <h1 class="h1"> <small>NIVEL C 2</small></h1>      
                     <h1></h1>
                 </div>
               </div>
@@ -367,7 +360,11 @@ session_start();
 
         <div class="card">
           <div class="card-block">
-          <h1><small>Proyecto en desarrollo</small></h1><h2><small>JavaScript full page scrolling. Mi primer cliente es un amigo y reconocido fotógrafo internacional. Una app renovable cada año bajo el título Year Book.</small></h2> 
+          <div class="float-right btn-group btn-group-sm">
+             <a href="#" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+             <a href="#" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+         </div>
+         <h1><small>Proyecto en desarrollo</small></h1><h2><small>JavaScript full page scrolling. Mi primer cliente es un amigo y reconocido fotógrafo internacional. Una app renovable cada año bajo el título Year Book.</small></h2> 
            
             <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
             
@@ -440,169 +437,6 @@ session_start();
     </div>
   </div>
 
-    <style type="text/css">
-   
-      body {
-        font-family: Arial, Helvetica, sans-serif;
-      }
-
-      /* Full-width input fields */
-      input[type=text], input[type=password] {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        box-sizing: border-box;
-      }
-
-      /* Set a style for all buttons */
-      button {
-        background-color: #ffdede;
-        color: rgb(0, 0, 0);
-        padding: 14px 20px;
-        margin: 8px 0;
-        border: none;
-        cursor: pointer;
-        width: 100%;
-        border-radius: 5px;
-      }
-
-        button:hover {
-          opacity: 0.8;
-        }
-
-      /* Extra styles for the cancel button */
-      .cancelbtn {
-        width: auto;
-        padding: 10px 18px;
-        background-color: #ffdede;
-      }
-
-      /* Center the image and position the close button */
-      .imgcontainer {
-        text-align: center;
-        margin: 24px 0 12px 0;
-        position: relative;
-      }
-
-      img.avatar {
-        width: 40%;
-        border-radius: 50%;
-      }
-
-      .container {
-        padding: 16px;
-      }
-
-      span.psw {
-        float: right;
-        padding-top: 16px;
-      }
-
-      /* The Modal (background) */
-      .modal {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgb(0,0,0); /* Fallback color */
-        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-        padding-top: 60px;
-      }
-
-      /* Modal Content/Box */
-      .modal-content {
-        background-color: #fefefe;
-        margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
-        border: 1px solid #888;
-        width: 80%; /* Could be more or less, depending on screen size */
-      }
-
-      /* The Close Button (x) */
-      .close {
-        position: absolute;
-        right: 25px;
-        top: 0;
-        color: rgba(0, 0, 0, 0.936);
-        font-size: 35px;
-        font-weight: bold;
-      }
-
-        .close:hover,
-        .close:focus {
-          color: red;
-          cursor: pointer;
-        }
-
-      /* Add Zoom Animation */
-      .animate {
-        -webkit-animation: animatezoom 0.6s;
-        animation: animatezoom 0.6s
-      }
-
-      @-webkit-keyframes animatezoom {
-        from {
-          -webkit-transform: scale(0)
-        }
-
-        to {
-          -webkit-transform: scale(1)
-        }
-      }
-
-      @keyframes animatezoom {
-        from {
-          transform: scale(0)
-        }
-
-        to {
-          transform: scale(1)
-        }
-      }
-
-      /* Change styles for span and cancel button on extra small screens */
-      @media screen and (max-width: 300px) {
-        span.psw {
-          display: block;
-          float: none;
-        }
-
-        .cancelbtn {
-          width: 100%;
-        }
-      }
-    </style>
-    <script>
-        // Get the modal
-        var modal = document.getElementById('id01');
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-          if (event.target == modal) {
-            modal.style.display = "none";
-          }
-        }
-      </script>
-      <div id="box">
-
-          <form method="post">
-              <div style="font-size: 20px;margin: 10px;">Login</div>
-
-              <input id="text" type="text" name="user_name"><br><br>
-              <input id="text" type="password" name="password"><br><br>
-
-              <input id="button"type="submit" value="Login"><br><br>
-
-              <a href="signup.php">Click to Signup</a><br><br>
-
-  
- 
-  
 </footer>
 
 <script>
